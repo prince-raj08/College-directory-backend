@@ -2,6 +2,7 @@ package com.directrory.collegeDirectory.controller.studentController;
 
 
 import com.directrory.collegeDirectory.DTO.studentDto.StudentRegisterRequest;
+import com.directrory.collegeDirectory.DTO.studentDto.StudentRegisterResponse;
 import com.directrory.collegeDirectory.services.studentServices.StudentServicesImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,10 @@ public class StudentController {
     private final StudentServicesImpl studentServices;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerStudent(@RequestBody StudentRegisterRequest studentRegisterRequest)
+    public ResponseEntity<StudentRegisterResponse> registerStudent(@RequestBody StudentRegisterRequest studentRegisterRequest)
     {
         log.info("Inside student register controller ---------------------------{}",studentRegisterRequest);
-        ResponseEntity<String> response = studentServices.registerStudent(studentRegisterRequest);
+        ResponseEntity<StudentRegisterResponse> response = studentServices.registerStudent(studentRegisterRequest);
         log.info("Sending response back to client  -----------------------------{}",response);
         return response;
     }
