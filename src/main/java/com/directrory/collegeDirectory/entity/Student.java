@@ -15,8 +15,11 @@ public class Student {
     private Long userId;
     @Column(name = "name",nullable = false,length = 50)
     private String name;
-    @Column(name = "userName",nullable = false,unique = true,length = 10)
+    @Column(name = "username",nullable = false,length = 10)
     private String username;
+    @Column(name = "pic",columnDefinition = "LONGBLOB")
+    @Lob
+    private byte [] profile;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "phone",nullable = false,unique = true,length = 10)
