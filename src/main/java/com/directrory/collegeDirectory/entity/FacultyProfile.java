@@ -22,9 +22,14 @@ public class FacultyProfile {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "phone")
     private String phone;
 
+    @Column(name = "office_hours")
     private String officeHours;
+
+    @Column(name = "password")
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)

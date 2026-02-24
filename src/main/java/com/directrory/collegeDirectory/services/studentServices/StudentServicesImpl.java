@@ -2,9 +2,11 @@ package com.directrory.collegeDirectory.services.studentServices;
 
 import com.directrory.collegeDirectory.DTO.studentDto.*;
 import com.directrory.collegeDirectory.common.Role;
+import com.directrory.collegeDirectory.entity.Department;
 import com.directrory.collegeDirectory.entity.Student;
 import com.directrory.collegeDirectory.globalHandler.exception.CommonException;
 import com.directrory.collegeDirectory.globalHandler.exception.SecurityError;
+import com.directrory.collegeDirectory.repository.DepartmentRepository;
 import com.directrory.collegeDirectory.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ import java.util.Base64;
 @Service
 public class StudentServicesImpl implements StudentServices {
     private final StudentRepository studentRepository;
-    private final ObjectMapper mapper;
+    private final DepartmentRepository departmentRepository;
     @Override
     public ResponseEntity<StudentRegisterResponse> registerStudent(StudentRegisterRequest studentRegisterRequest) {
 
@@ -43,9 +46,12 @@ public class StudentServicesImpl implements StudentServices {
                     throw new CommonException("Username not available");
                 });
 
+        Department dept = departmentRepository.findByDept(studentRegisterRequest.getDept())
+                .orElseThrow(() -> new CommonException("Invalid Department"));
+
         Student student = new Student();
         student.setName(studentRegisterRequest.getName());
-        student.setDept(studentRegisterRequest.getDept());
+        student.setDept(dept);
         student.setEmail(studentRegisterRequest.getEmail());
         student.setPassword(studentRegisterRequest.getPassword());
         student.setUsername(studentRegisterRequest.getUsername());
@@ -100,7 +106,7 @@ public class StudentServicesImpl implements StudentServices {
         response.setId(student.getUserId());
         response.setName(student.getName());
         response.setEmail(student.getEmail());
-        response.setDepartment(student.getDept());
+        response.setDepartment(student.getDept().getDept());
         response.setYear(student.getYear());
         response.setPhone(student.getPhone());
 
@@ -111,6 +117,25 @@ public class StudentServicesImpl implements StudentServices {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity<List<StudentList>> getAllStudent() {
+        log.info("Inside Student list services ------------------>");
+        List<Student> students = studentRepository.findAll();
+        List<StudentList> list = new ArrayList<>();
+        for( Student s : students)
+        {
+            StudentList result = new StudentList();
+            result.setName(s.getName());
+            result.setEmail(s.getEmail());
+            result.setDepartment(s.getDept().getDept());
+            result.setYear(s.getYear());
+            result.setId(s.getUserId());
+            list.add(result);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
 

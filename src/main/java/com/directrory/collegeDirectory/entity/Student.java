@@ -28,8 +28,11 @@ public class Student {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(name = "dept",nullable = false)
-    private String dept;
+
+    @ManyToOne
+    @JoinColumn(name = "dept_id")
+    private Department dept;;
     @Column(name = "year",nullable = false)
     private String year;
+
 }

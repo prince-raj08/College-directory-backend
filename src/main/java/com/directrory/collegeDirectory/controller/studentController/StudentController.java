@@ -8,6 +8,8 @@
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
 
+    import java.util.List;
+
     @CrossOrigin(origins = "http://localhost:5173")
     @Slf4j
     @RequiredArgsConstructor
@@ -43,4 +45,12 @@
             return response;
         }
 
+        @GetMapping("/list-student")
+        public ResponseEntity<List<StudentList>> getAllStudent()
+        {
+            log.info("Inside get all student controller ----------------------->");
+            ResponseEntity<List<StudentList>> response = studentServices.getAllStudent();
+            log.info("Sending response back to the client ---------------------->");
+            return response;
+        }
     }
